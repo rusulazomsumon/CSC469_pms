@@ -1,64 +1,139 @@
-<?php 
-session_start();
-
-  include('header.php');
-  include("connection.php");
-	include("functions.php");
-
-	// $user_data = check_login($con);
-
-?>
-
 <!DOCTYPE html>
-<html lang="en">   
-<style>
-    * {
-        box-sizing: border-box;
+<html lang="en">
+<?php session_start() ?>
+<?php 
+	if(!isset($_SESSION['login_id']))
+	    header('location:login.php');
+    include 'db_connect.php';
+    ob_start();
+  if(!isset($_SESSION['system'])){
+
+    $system = $conn->query("SELECT * FROM system_settings")->fetch_array();
+    foreach($system as $k => $v){
+      $_SESSION['system'][$k] = $v;
     }
-.containerimg {
-  position: relative;
-}
+  }
+  ob_end_flush();
 
-.centerimg {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 18px;
-}
+	include 'header.php' 
+?>
+<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
+<div class="wrapper">
+  <?php include 'topbar.php' ?>
+  <?php include 'sidebar.php' ?>
 
-img { 
-  width: 100%;
-  height: auto;
-  opacity: 0.5;
-}
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+  	 <div class="toast" id="alert_toast" role="alert" aria-live="assertive" aria-atomic="true">
+	    <div class="toast-body text-white">
+	    </div>
+	  </div>
+    <div id="toastsContainerTopRight" class="toasts-top-right fixed"></div>
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0"><?php echo $title ?></h1>
+          </div><!-- /.col -->
 
-</style>
-
-<div class="container">
-  <div class="row">
-    <div class="col-sm-4">
-      <!-- <h3 class="text-success">	Hello, <?php echo $user_data['user_name']; ?></h3> -->
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
-      <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...</p>
+        </div><!-- /.row -->
+            <hr class="border-primary">
+      </div><!-- /.container-fluid -->
     </div>
-    <div class="col-sm-4">
-      <h3>Column 2</h3>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
-      <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...</p>
-    </div>
-    <div class="col-sm-4">
-      <h3>Column 3</h3>        
-      <!--Google map-->
-        <div id="map-container-google-2" class="z-depth-1-half map-container" style="height: 500px">
-        <iframe src="https://maps.google.com/maps?q=chicago&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0"
-            style="border:0" allowfullscreen></iframe>
-        </div>
+    <!-- /.content-header -->
 
-        <!--Google Maps-->
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+         <?php 
+            $page = isset($_GET['page']) ? $_GET['page'] : 'home';
+            if(!file_exists($page.".php")){
+                include '404.html';
+            }else{
+            include $page.'.php';
+
+            }
+          ?>
+      </div><!--/. container-fluid -->
+    </section>
+    <!-- /.content -->
+    <div class="modal fade" id="confirm_modal" role='dialog'>
+    <div class="modal-dialog modal-md" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title">Confirmation</h5>
+      </div>
+      <div class="modal-body">
+        <div id="delete_content"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id='confirm' onclick="">Continue</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+      </div>
     </div>
   </div>
-</div>
+  <div class="modal fade" id="uni_modal" role='dialog'>
+    <div class="modal-dialog modal-md" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title"></h5>
+      </div>
+      <div class="modal-body">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id='submit' onclick="$('#uni_modal form').submit()">Save</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+      </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="uni_modal_right" role='dialog'>
+    <div class="modal-dialog modal-full-height  modal-md" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span class="fa fa-arrow-right"></span>
+        </button>
+      </div>
+      <div class="modal-body">
+      </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="viewer_modal" role='dialog'>
+    <div class="modal-dialog modal-md" role="document">
+      <div class="modal-content">
+              <button type="button" class="btn-close" data-dismiss="modal"><span class="fa fa-times"></span></button>
+              <img src="" alt="">
+      </div>
+    </div>
+  </div>
+  </div>
+  <!-- /.content-wrapper -->
 
-<?php include('footer.php'); ?>
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content goes here -->
+  </aside>
+  <!-- /.control-sidebar -->
+
+  <!-- Main Footer -->
+  <footer class="main-footer">
+    <strong>Copyright &copy; 2021 <a href="https://www.itsourcecode.com/">itsourcecode.com</a>.</strong>
+    All rights reserved.
+    <div class="float-right d-none d-sm-inline-block">
+      <b><?php echo $_SESSION['system']['name'] ?></b>
+    </div>
+  </footer>
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+<!-- jQuery -->
+<!-- Bootstrap -->
+<?php include 'footer.php' ?>
+</body>
 </html>
