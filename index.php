@@ -122,7 +122,7 @@
 
   <!-- Main Footer -->
   <footer class="main-footer">
-    <strong>Copyright &copy; 2021 <a href="https://www.itsourcecode.com/">itsourcecode.com</a>.</strong>
+    <strong>Copyright &copy; 2022 <a href="https://www.rusulazom.xyz/">Rusul Azom Sumon</a>.</strong>
     All rights reserved.
     <div class="float-right d-none d-sm-inline-block">
       <b><?php echo $_SESSION['system']['name'] ?></b>
