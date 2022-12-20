@@ -122,7 +122,7 @@
 
   <!-- Main Footer -->
   <footer class="main-footer">
-    <strong>Copyright &copy; 2022 <a href="https://www.rusulazom.xyz/">Team FAV FIVE</a>.</strong>
+    <strong>Copyright &copy; 2022 <a href="#">Team FAV FIVE - CSC469</a>.</strong>
     All rights reserved.
     <div class="float-right d-none d-sm-inline-block">
       <!-- <b><?php echo $_SESSION['system']['name'] ?></b> -->
